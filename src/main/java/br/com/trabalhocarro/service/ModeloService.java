@@ -48,7 +48,7 @@ public class ModeloService {
 		try {
 			modeloRepository.deleteById(id);
 			
-		}catch(DataIntegrityViolationException e) {
+		}catch(DataIntegrityException e) {
 			throw new DataIntegrityException("Ocorreu um erro de integridade!");
 		}
 	}
