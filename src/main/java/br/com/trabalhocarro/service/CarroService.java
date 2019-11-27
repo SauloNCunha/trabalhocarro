@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 import br.com.trabalhocarro.domain.Carro;
 import br.com.trabalhocarro.exception.DataIntegrityException;
 import br.com.trabalhocarro.exception.ObjectNotFoundException;
 import br.com.trabalhocarro.repositories.CarroRepository;
 
+@Service
 public class CarroService {
 	
 	@Autowired
@@ -27,20 +30,20 @@ public class CarroService {
 	
 	
 	public Carro kmSuperior(double km) throws ObjectNotFoundException{
-		Optional<Carro> carro = carroRepository.findByOdometroGreaterThan(km);
-		return carro.orElseThrow(() ->
+		Optional<Carro> carros = carroRepository.findByOdometroGreaterThan(km);
+		return carros.orElseThrow(() ->
 		new ObjectNotFoundException("Não encontrado um km superior que esse!"));
 	}
 	
 	public Carro diariaInferior(double diaria) throws ObjectNotFoundException {
-		Optional<Carro> carro = carroRepository.findByDiariaLessThan(diaria);
-		return carro.orElseThrow(() ->
+		Optional<Carro> carros = carroRepository.findByDiariaLessThan(diaria);
+		return carros.orElseThrow(() ->
 				new ObjectNotFoundException("Não foi possivel achar uma diaria inferior a essa!"));
 	}
 	
 	public Carro anoEntre(int anoIni, int anoFim) throws ObjectNotFoundException {
-		Optional<Carro> carro = carroRepository.findByAnoBetween(anoIni, anoFim);
-		return carro.orElseThrow(() -> 
+		Optional<Carro> carros = carroRepository.findByAnoBetween(anoIni, anoFim);
+		return carros.orElseThrow(() -> 
 				new ObjectNotFoundException("Não foi encontrado carros entre os anos!"));
 	}
 	
@@ -57,9 +60,8 @@ public class CarroService {
 		this.findByID(id);
 		try {
 			carroRepository.deleteById(id);
-		}catch(DataIntegrityException e){
+		}catch(DataIntegrityViolationException e){
 			throw new DataIntegrityException("Ocorreu um erro de integridade!");
 		}
 	}
-
-}
+ }
